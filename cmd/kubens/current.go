@@ -17,15 +17,15 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/ahmetb/kubectx/internal/kubeconfig/loader"
+	"github.com/ahmetb/kubectx/internal/kubeconfig/single"
 	"io"
-
-	"github.com/ahmetb/kubectx/internal/kubeconfig"
 )
 
 type CurrentOp struct{}
 
 func (c CurrentOp) Run(stdout, _ io.Writer) error {
-	kc := new(kubeconfig.Kubeconfig).WithLoader(kubeconfig.DefaultLoader)
+	kc := new(single.Kubeconfig).WithLoader(loader.DefaultLoader)
 	defer kc.Close()
 	if err := kc.Parse(); err != nil {
 		return fmt.Errorf("kubeconfig error, %w", err)

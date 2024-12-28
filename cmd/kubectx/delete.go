@@ -17,9 +17,10 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/ahmetb/kubectx/internal/kubeconfig/loader"
+	"github.com/ahmetb/kubectx/internal/kubeconfig/single"
 	"io"
 
-	"github.com/ahmetb/kubectx/internal/kubeconfig"
 	"github.com/ahmetb/kubectx/internal/printer"
 )
 
@@ -49,7 +50,7 @@ func (op DeleteOp) Run(_, stderr io.Writer) error {
 // deleteContext deletes a context entry by NAME or current-context
 // indicated by ".".
 func deleteContext(name string) (deleteName string, wasActiveContext bool, err error) {
-	kc := new(kubeconfig.Kubeconfig).WithLoader(kubeconfig.DefaultLoader)
+	kc := new(single.Kubeconfig).WithLoader(loader.DefaultLoader)
 	defer kc.Close()
 	if err := kc.Parse(); err != nil {
 		return deleteName, false, fmt.Errorf("kubeconfig error, %w", err)

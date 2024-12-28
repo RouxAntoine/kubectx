@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package kubeconfig
+package single
 
 import (
 	"testing"
@@ -51,7 +51,7 @@ func TestKubeconfig_DeleteContextEntry(t *testing.T) {
 			testutil.Ctx("c1"),
 			testutil.Ctx("c2"),
 			testutil.Ctx("c3")).ToYAML(t))
-	kc := new(StandardKubeconfig).WithLoader(test)
+	kc := new(Kubeconfig).WithLoader(test)
 	if err := kc.Parse(); err != nil {
 		t.Fatal(err)
 	}

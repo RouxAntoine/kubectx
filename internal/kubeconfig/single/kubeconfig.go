@@ -12,35 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package kubeconfig
+package single
 
 import (
 	"errors"
-	"io"
-
 	"fmt"
+	"github.com/ahmetb/kubectx/internal/kubeconfig/loader"
 	"gopkg.in/yaml.v3"
 )
 
-type ReadWriteResetCloser interface {
-	io.ReadWriteCloser
-
-	// Reset truncates the file and seeks to the beginning of the file.
-	Reset() error
-}
-
-type Loader interface {
-	Load() ([]ReadWriteResetCloser, error)
-}
-
 type Kubeconfig struct {
-	loader Loader
+	loader loader.Loader
 
-	f        ReadWriteResetCloser
+	f        loader.ReadWriteResetCloser
 	rootNode *yaml.Node
 }
 
-func (k *Kubeconfig) WithLoader(l Loader) *Kubeconfig {
+func (k *Kubeconfig) WithLoader(l loader.Loader) *Kubeconfig {
 	k.loader = l
 	return k
 }

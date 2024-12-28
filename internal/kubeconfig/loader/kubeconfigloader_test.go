@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package kubeconfig
+package loader
 
 import (
 	"github.com/ahmetb/kubectx/internal/cmdutil"
@@ -72,7 +72,7 @@ func Test_kubeconfigPath_envOvverideDoesNotSupportPathSeparator(t *testing.T) {
 
 func TestStandardKubeconfigLoader_returnsNotFoundErr(t *testing.T) {
 	defer testutil.WithEnvVar("KUBECONFIG", "foo")()
-	kc := new(Kubeconfig).WithLoader(DefaultLoader)
+	kc := new(SingleKubeconfig).WithLoader(DefaultLoader)
 	err := kc.Parse()
 	if err == nil {
 		t.Fatal("expected err")

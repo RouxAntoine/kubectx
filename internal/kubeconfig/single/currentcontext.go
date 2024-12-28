@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package kubeconfig
+package single
 
 // GetCurrentContext returns "current-context" value in given
 // kubeconfig object Node, or returns "" if not found.

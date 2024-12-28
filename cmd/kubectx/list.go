@@ -16,12 +16,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/ahmetb/kubectx/internal/kubeconfig/loader"
+	"github.com/ahmetb/kubectx/internal/kubeconfig/single"
 	"io"
 
 	"facette.io/natsort"
 
 	"github.com/ahmetb/kubectx/internal/cmdutil"
-	"github.com/ahmetb/kubectx/internal/kubeconfig"
 	"github.com/ahmetb/kubectx/internal/printer"
 )
 
@@ -29,7 +30,7 @@ import (
 type ListOp struct{}
 
 func (_ ListOp) Run(stdout, stderr io.Writer) error {
-	kc := new(kubeconfig.Kubeconfig).WithLoader(kubeconfig.DefaultLoader)
+	kc := new(single.Kubeconfig).WithLoader(loader.DefaultLoader)
 	defer kc.Close()
 	if err := kc.Parse(); err != nil {
 		if cmdutil.IsNotFoundErr(err) {
