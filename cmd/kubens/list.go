@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	. "github.com/ahmetb/kubectx/internal/kubeconfig"
 	"github.com/ahmetb/kubectx/internal/kubeconfig/loader"
 	"github.com/ahmetb/kubectx/internal/kubeconfig/single"
 	"io"
@@ -34,7 +35,8 @@ import (
 type ListOp struct{}
 
 func (op ListOp) Run(stdout, stderr io.Writer) error {
-	kc := new(single.Kubeconfig).WithLoader(loader.DefaultLoader)
+	var kc ListKubeconfigForNamespace
+	kc = new(single.Kubeconfig).WithLoader(loader.DefaultLoader)
 	defer kc.Close()
 	if err := kc.Parse(); err != nil {
 		return fmt.Errorf("kubeconfig error, %w", err)
@@ -64,7 +66,7 @@ func (op ListOp) Run(stdout, stderr io.Writer) error {
 	return nil
 }
 
-func queryNamespaces(kc *single.Kubeconfig) ([]string, error) {
+func queryNamespaces(kc ListKubeconfigForNamespace) ([]string, error) {
 	if os.Getenv("_MOCK_NAMESPACES") != "" {
 		return []string{"ns1", "ns2"}, nil
 	}
@@ -97,7 +99,7 @@ func queryNamespaces(kc *single.Kubeconfig) ([]string, error) {
 	return out, nil
 }
 
-func newKubernetesClientSet(kc *single.Kubeconfig) (*kubernetes.Clientset, error) {
+func newKubernetesClientSet(kc ByteKubeconfig) (*kubernetes.Clientset, error) {
 	b, err := kc.Bytes()
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert in-memory kubeconfig to yaml, %w", err)

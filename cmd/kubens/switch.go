@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	. "github.com/ahmetb/kubectx/internal/kubeconfig"
 	"github.com/ahmetb/kubectx/internal/kubeconfig/loader"
 	"github.com/ahmetb/kubectx/internal/kubeconfig/single"
 	"io"
@@ -35,7 +36,8 @@ type SwitchOp struct {
 }
 
 func (s SwitchOp) Run(_, stderr io.Writer) error {
-	kc := new(single.Kubeconfig).WithLoader(loader.DefaultLoader)
+	var kc SwitchKubeconfigForNamespace
+	kc = new(single.Kubeconfig).WithLoader(loader.DefaultLoader)
 	defer kc.Close()
 	if err := kc.Parse(); err != nil {
 		return fmt.Errorf("kubeconfig error, %w", err)
@@ -49,7 +51,7 @@ func (s SwitchOp) Run(_, stderr io.Writer) error {
 	return err
 }
 
-func switchNamespace(kc *single.Kubeconfig, ns string, force bool) (string, error) {
+func switchNamespace(kc SwitchKubeconfigForNamespace, ns string, force bool) (string, error) {
 	ctx := kc.GetCurrentContext()
 	if ctx == "" {
 		return "", errors.New("current-context is not set")
@@ -96,7 +98,7 @@ func switchNamespace(kc *single.Kubeconfig, ns string, force bool) (string, erro
 	return ns, nil
 }
 
-func namespaceExists(kc *single.Kubeconfig, ns string) (bool, error) {
+func namespaceExists(kc SwitchKubeconfigForNamespace, ns string) (bool, error) {
 	// for tests
 	if os.Getenv("_MOCK_NAMESPACES") != "" {
 		return ns == "ns1" || ns == "ns2", nil

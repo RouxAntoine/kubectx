@@ -17,6 +17,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	. "github.com/ahmetb/kubectx/internal/kubeconfig"
 	"github.com/ahmetb/kubectx/internal/kubeconfig/loader"
 	"github.com/ahmetb/kubectx/internal/kubeconfig/single"
 	"io"
@@ -26,7 +27,8 @@ import (
 type CurrentOp struct{}
 
 func (_op CurrentOp) Run(stdout, _ io.Writer) error {
-	kc := new(single.Kubeconfig).WithLoader(loader.DefaultLoader)
+	var kc CurrentKubeconfig
+	kc = new(single.Kubeconfig).WithLoader(loader.DefaultLoader)
 	defer kc.Close()
 	if err := kc.Parse(); err != nil {
 		return fmt.Errorf("kubeconfig error, %w", err)
