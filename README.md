@@ -226,3 +226,14 @@ recommend pairing kubectx and kubens with [fzf](#interactive-mode) and
 
 [![Stargazers over time](https://starchart.cc/ahmetb/kubectx.svg)](https://starchart.cc/ahmetb/kubectx)
 ![Google Analytics](https://ga-beacon.appspot.com/UA-2609286-17/kubectx/README?pixel) <!-- TODO broken since Aug 2021 as igrigorik left Google -->
+
+### release
+
+To create release and push tags/artifact in github
+
+```shell
+$ read -s GITHUB_TOKEN
+$ export GITHUB_TOKEN
+$ git tag v0.9.5-3
+$ goreleaser release --skip snapcraft --clean
+```
